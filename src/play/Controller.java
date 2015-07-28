@@ -4,8 +4,9 @@ public class Controller {
 
     public int nextChoice(int[] buttonData, int[] eo, int com, int user) {
 
+        int[] tempButtonData = buttonData;
         //then check is their any place obvious to return, input button details with 1,0 and enter null buttons as 2
-        int returnValue = obviousNextChoise(buttonData, com, user);
+        int returnValue = obviousNextChoise(tempButtonData, com, user);
         System.out.println(returnValue);
         //else go to logic
         if (returnValue == 0) {
@@ -31,6 +32,13 @@ public class Controller {
                 }
             }
 
+        }
+        if (returnValue == 0) {
+            for (int we = 0; we < buttonData.length; we++) {
+                if (buttonData[we] == 2) {
+                    return we + 1;
+                }
+            }
         }
         return returnValue;
     }
@@ -308,7 +316,7 @@ public class Controller {
             int t3 = eo[2];
 
             if (t1 == 1 & t2 == 5 & t3 == 9) {
-                return 3;//Chamin have to take one of these two numbers
+                return 2;//Chamin have to take one of these two numbers
             } else if (t1 == 1 & t2 == 5 & t3 == 6) {
                 return 9;
             } else if (t1 == 2 & t2 == 3 & t3 == 1) {

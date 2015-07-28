@@ -5,35 +5,36 @@
  */
 package gui;
 
-
+import com.jtattoo.plaf.noire.NoireLookAndFeel;
 import static java.lang.Math.abs;
-import java.util.Random;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import play.Controller;
-
-
-
 
 /**
  *
  * @author Chamin
  */
 public class tttGUI extends javax.swing.JFrame {
-    
-    Controller controller =null;
 
-    int list1[] = {2,2,2,2,2,2,2,2,2};
-    int list1ID =0;
+    Controller controller = null;
+
+    int list1[] = {2, 2, 2, 2, 2, 2, 2, 2, 2};
+    int list1ID = 0;
     int list2[] = new int[9];
-    int list2ID=0;
+    int list2ID = 0;
     
-    int currentMark =0;
-    
-    
+    boolean clickState[] ={false,false,false,false,false,false,false,false,false,false};
+
+    int currentMark = 1;
+
     public tttGUI() {
         initComponents();
-        controller= new Controller();
-        
+        controller = new Controller();
+
     }
 
     /**
@@ -47,28 +48,26 @@ public class tttGUI extends javax.swing.JFrame {
 
         btnGrp1 = new javax.swing.ButtonGroup();
         btn2 = new javax.swing.JButton();
-        btn3 = new javax.swing.JButton();
         btn1 = new javax.swing.JButton();
-        btn4 = new javax.swing.JButton();
-        btn5 = new javax.swing.JButton();
+        btn3 = new javax.swing.JButton();
         btn6 = new javax.swing.JButton();
-        btn7 = new javax.swing.JButton();
-        btn8 = new javax.swing.JButton();
+        btn5 = new javax.swing.JButton();
+        btn4 = new javax.swing.JButton();
         btn9 = new javax.swing.JButton();
+        btn8 = new javax.swing.JButton();
+        btn7 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         SPbtn = new javax.swing.JRadioButton();
         TPbtn = new javax.swing.JRadioButton();
+        winnerState = new javax.swing.JLabel();
+        btnReplay = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tic Tac Toe");
 
         btn2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn2ActionPerformed(evt);
-            }
-        });
-
-        btn3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn3ActionPerformed(evt);
             }
         });
 
@@ -78,15 +77,9 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn4.addActionListener(new java.awt.event.ActionListener() {
+        btn3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn4ActionPerformed(evt);
-            }
-        });
-
-        btn5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn5ActionPerformed(evt);
+                btn3ActionPerformed(evt);
             }
         });
 
@@ -96,9 +89,21 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn7.addActionListener(new java.awt.event.ActionListener() {
+        btn5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn7ActionPerformed(evt);
+                btn5ActionPerformed(evt);
+            }
+        });
+
+        btn4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn4ActionPerformed(evt);
+            }
+        });
+
+        btn9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn9ActionPerformed(evt);
             }
         });
 
@@ -108,11 +113,13 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn9.addActionListener(new java.awt.event.ActionListener() {
+        btn7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn9ActionPerformed(evt);
+                btn7ActionPerformed(evt);
             }
         });
+
+        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         btnGrp1.add(SPbtn);
         SPbtn.setSelected(true);
@@ -126,117 +133,185 @@ public class tttGUI extends javax.swing.JFrame {
         btnGrp1.add(TPbtn);
         TPbtn.setText("Two Player");
 
+        winnerState.setText("Winner is :");
+
+        btnReplay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/retry button.png"))); // NOI18N
+        btnReplay.setText("Retry");
+        btnReplay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReplayActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(SPbtn)
+                        .addGap(206, 206, 206))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TPbtn))
+                        .addContainerGap())))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(SPbtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TPbtn)
+                .addGap(27, 27, 27)
+                .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
                         .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(SPbtn)
-                    .addComponent(TPbtn))
-                .addGap(40, 40, 40))
+                        .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(105, 105, 105)
-                .addComponent(SPbtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TPbtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn6ActionPerformed
-        click(6,currentMark);
-        btn6.setEnabled(false);
-    }//GEN-LAST:event_btn6ActionPerformed
+    private void btn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn4ActionPerformed
+        if(!clickState[4]){
+        click(4, currentMark);
+        clickState[4]=true;
+        }
+        //btn4.setEnabled(false);
+    }//GEN-LAST:event_btn4ActionPerformed
 
-    private void btn9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn9ActionPerformed
-        click(9,currentMark);
-        btn9.setEnabled(false);
-    }//GEN-LAST:event_btn9ActionPerformed
+    private void btn7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn7ActionPerformed
+        if(!clickState[7]){
+        click(7, currentMark);
+        clickState[7]=true;
+        }
+        //btn7.setEnabled(false);
+    }//GEN-LAST:event_btn7ActionPerformed
 
-    private void btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1ActionPerformed
-        click(1,currentMark);
-        btn1.setEnabled(false);
-    }//GEN-LAST:event_btn1ActionPerformed
+    private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
+        if(!clickState[3]){
+        click(3, currentMark);
+        clickState[3]=true;
+        }
+        //btn3.setEnabled(false);
+
+    }//GEN-LAST:event_btn3ActionPerformed
 
     private void SPbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SPbtnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SPbtnActionPerformed
 
     private void btn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2ActionPerformed
-        click(2,currentMark);
-        btn2.setEnabled(false);
+        if(!clickState[2]){
+        click(2, currentMark);
+        clickState[2]=true;
+        }
+        //btn2.setEnabled(false);
     }//GEN-LAST:event_btn2ActionPerformed
 
-    private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
-        btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-        click(3,currentMark);
-        
-        btn3.setEnabled(false);
-    }//GEN-LAST:event_btn3ActionPerformed
+    private void btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1ActionPerformed
+        if(!clickState[1]){
+        click(1, currentMark);
+        clickState[1]=true;
+        }
+        //btn1.setEnabled(false);
+    }//GEN-LAST:event_btn1ActionPerformed
 
-    private void btn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn4ActionPerformed
-        click(4,currentMark);
-        btn4.setEnabled(false);
-    }//GEN-LAST:event_btn4ActionPerformed
+    private void btn6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn6ActionPerformed
+        if(!clickState[6]){
+        click(6, currentMark);
+        clickState[6]=true;
+        }
+        //btn6.setEnabled(false);
+    }//GEN-LAST:event_btn6ActionPerformed
 
     private void btn5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn5ActionPerformed
-        click(5,currentMark);
-        btn5.setEnabled(false);
+        if(!clickState[5]){
+        click(5, currentMark);
+        clickState[5]=true;
+        }
+        //btn5.setEnabled(false);
     }//GEN-LAST:event_btn5ActionPerformed
 
-    private void btn7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn7ActionPerformed
-        click(7,currentMark);
-        btn7.setEnabled(false);
-    }//GEN-LAST:event_btn7ActionPerformed
+    private void btn9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn9ActionPerformed
+        if(!clickState[9]){
+        click(9, currentMark);
+        clickState[9]=true;
+        }
+        //btn9.setEnabled(false);
+    }//GEN-LAST:event_btn9ActionPerformed
 
     private void btn8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn8ActionPerformed
-        click(8,currentMark);
+        if(!clickState[8]){
+        click(8, currentMark);
+        clickState[8]=true;
+        }
         //btn8.setEnabled(false);
     }//GEN-LAST:event_btn8ActionPerformed
+
+    private void btnReplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplayActionPerformed
+        replay();
+    }//GEN-LAST:event_btnReplayActionPerformed
 
     /**
      * @param args the command line arguments
@@ -265,6 +340,13 @@ public class tttGUI extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        try {
+            /* Create and display the form */
+            javax.swing.UIManager.setLookAndFeel(new NoireLookAndFeel());
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -272,141 +354,176 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
     }
-    
-    public void click(int index,int mark){
-        
+
+    public void click(int index, int mark) {
+
         setMark(index, mark);  //setting icon of btn intially
         /*
-        list1[index]=mark;
-        list2[list2ID]=index;
-        list2ID++;
-                */
-        
-        int winner =controller.checkForWin(list1, abs(mark-1), mark);
-        
-        if (winner == 0){
-            if(SPbtn.isSelected()){
-                singlePlayer(mark);
+         list1[index]=mark;
+         list2[list2ID]=index;
+         list2ID++;
+         */
+
+        int winner = controller.checkForWin(list1, abs(mark - 1), mark);
+
+        if (winner == 0) {
+            if (list2[8] != 0) {
+                System.out.println("Game is draw");
+            } 
+            else if (SPbtn.isSelected()) {
+                singlePlayer(mark);  //single player mode
+
+                winner = controller.checkForWin(list1, abs(mark - 1), mark);
+
+                System.out.println(winner + "********" + list2[8]);
+                if (winner == 0 && (list2[8] != 0)) {
+                    System.out.println("Game is draw");
+
+                } else if (winner == -1) {
+                    System.out.println("**************  Com win **************");
+
+                } else if (winner == -2) {
+
+                    System.out.println("**************  user win **************");
+                }
+            } else {
+                currentMark = abs(mark - 1);  // two palyer mode
             }
-            else{
-                currentMark = abs(mark-1);
-            }
-        }
-        else if(winner == -1){
+        } else if (winner == -1) {
             System.out.println("**************  Com win **************");
-        }
-        else if(winner == -2){
-            
+
+        } else if (winner == -2) {
+
             System.out.println("**************  user win **************");
         }
-        
+
     }
-    
-    
-    
-    private void singlePlayer(int mark){
-     
-        int nextClick=controller.nextChoice(list1, list2, abs(mark-1), mark);
-        
-        if(nextClick==0){
-            nextClick = 1 + (int)(Math.random() * ((9 - 1) + 1));   //Min + (int)(Math.random() * ((Max - Min) + 1))
-        }
-        
-        if(mark == 0){
-            setMark(nextClick,1);
-        }
-        if(mark == 1){
-            setMark(nextClick,0);
+
+    private void singlePlayer(int mark) {
+
+        int tempList2[] = Arrays.copyOfRange(list2, 0, list2ID);
+        int nextClick = controller.nextChoice(list1, tempList2, abs(mark - 1), mark);
+        System.out.println("next click is");
+        System.out.println(nextClick);
+        if (nextClick == 0) {
+            //game is over
             
         }
+
+        if (mark == 0) {
+            setMark(nextClick, 1);
+        }
+        if (mark == 1) {
+            setMark(nextClick, 0);
+
+        }
     }
-    
-    private void setMark(int nextClick,int nextMark) {
-        
-        System.out.println(nextClick+"***************************");
-        list1[nextClick-1]=nextMark;
-        
-        
-        list2[list2ID]=nextClick;
-        
+
+    void replay() {
+
+        this.dispose();
+        new tttGUI().setVisible(true);
+    }
+
+    private void setMark(int nextClick, int nextMark) {
+
+        System.out.println(nextClick + "***************************");
+        list1[nextClick - 1] = nextMark;
+
+        list2[list2ID] = nextClick;
+
         list2ID++;
-        
-        if(nextMark==1){
+
+        if (nextMark == 1) {
             System.out.println("nextMark  1 in if  ******************");
-            switch(nextClick){
+            switch (nextClick) {
                 case 1:
                     btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[1]=true;
                     break;
                 case 2:
                     btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[2]=true;
                     break;
                 case 3:
                     btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[3]=true;
                     break;
                 case 4:
                     btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[4]=true;
                     break;
                 case 5:
                     btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[5]=true;
                     break;
                 case 6:
                     btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[6]=true;
                     break;
                 case 7:
                     btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[7]=true;
                     break;
                 case 8:
                     btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[8]=true;
                     break;
                 case 9:
                     btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[9]=true;
                     break;
                 default:
                     System.out.println("There is a error");
             }
-        }
-        else if(nextMark==0){
+        } else if (nextMark == 0) {
             System.out.println("nextMark  0 in if  ******************");
-            switch(nextClick){
+            switch (nextClick) {
                 case 1:
                     btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[1]=true;
                     break;
                 case 2:
                     btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[2]=true;
                     break;
                 case 3:
                     btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                    System.out.println("btn3 image should edit");
+                    clickState[3]=true;
                     break;
                 case 4:
                     btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[4]=true;
                     break;
                 case 5:
                     btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[5]=true;
                     break;
                 case 6:
                     btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[6]=true;
                     break;
                 case 7:
                     btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[7]=true;
                     break;
                 case 8:
                     btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[8]=true;
                     break;
                 case 9:
                     btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[9]=true;
                     break;
                 default:
                     System.out.println("There is a error");
 
             }
-            
+
         }
-        
+
     }
-    
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton SPbtn;
@@ -421,7 +538,9 @@ public class tttGUI extends javax.swing.JFrame {
     private javax.swing.JButton btn8;
     private javax.swing.JButton btn9;
     private javax.swing.ButtonGroup btnGrp1;
+    private javax.swing.JButton btnReplay;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel winnerState;
     // End of variables declaration//GEN-END:variables
 
-    
 }
