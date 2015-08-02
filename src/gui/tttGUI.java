@@ -6,13 +6,21 @@
 package gui;
 
 import com.jtattoo.plaf.noire.NoireLookAndFeel;
+import data.Player;
 import static java.lang.Math.abs;
 import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import play.Controller;
+
+
 
 /**
  *
@@ -27,14 +35,59 @@ public class tttGUI extends javax.swing.JFrame {
     int list2[] = new int[9];
     int list2ID = 0;
     
+    int gameMode;//1= single   2= multi offline   3= multi online
+    Player player1;
+    String p1name;
+    Player player2;
+    String p2name;
+    
+    
+    
     boolean clickState[] ={false,false,false,false,false,false,false,false,false,false};
 
-    int currentMark = 1;
+    Random ran = new Random();
+    int currentMark = ran.nextInt(2);
+    
+   
+    int p1Mark=currentMark;
+    int p2Mark =abs(currentMark-1);
+    
+    String winnerStateTxt="";
+    String currentPlayer=p1name;
+    //Dictionary<String, int> dic =new Dictionary<String, int>(){};
+    
+      
 
-    public tttGUI() {
+    public tttGUI(int gameMode,Player player1,Player player2) {//multi player mode
         initComponents();
         controller = new Controller();
+        
+        this.gameMode =gameMode;
+        this.player1 =player1;
+        this.p1name=player1.getName();
+        this.player2=player2;
+        this.p2name=player2.getName();
+        
+        title.setText(player1.getName()+" VS "+player2.getName());
+        
+        stateUpdate();
+        
+        
+    }
 
+    tttGUI(int gameMode, Player player1) {
+        initComponents();
+        controller = new Controller();
+        
+        this.gameMode =gameMode;
+        this.player1 =player1;
+        this.p1name=player1.getName();
+        this.p2name="PC";
+        
+        title.setText(player1.getName()+" VS PC");
+        
+        
+        stateUpdate();
     }
 
     /**
@@ -57,10 +110,11 @@ public class tttGUI extends javax.swing.JFrame {
         btn8 = new javax.swing.JButton();
         btn7 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        SPbtn = new javax.swing.JRadioButton();
-        TPbtn = new javax.swing.JRadioButton();
         winnerState = new javax.swing.JLabel();
         btnReplay = new javax.swing.JButton();
+        btnMenu = new javax.swing.JButton();
+        nxtMovelbl = new javax.swing.JLabel();
+        title = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tic Tac Toe");
@@ -121,21 +175,8 @@ public class tttGUI extends javax.swing.JFrame {
 
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        btnGrp1.add(SPbtn);
-        SPbtn.setSelected(true);
-        SPbtn.setText("Single Player");
-        SPbtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SPbtnActionPerformed(evt);
-            }
-        });
-
-        btnGrp1.add(TPbtn);
-        TPbtn.setText("Two Player");
-
         winnerState.setText("Winner is :");
 
-        btnReplay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/retry button.png"))); // NOI18N
         btnReplay.setText("Retry");
         btnReplay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,37 +184,50 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
+        btnMenu.setText("Player Menu");
+        btnMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuActionPerformed(evt);
+            }
+        });
+
+        nxtMovelbl.setText("Next move to :");
+
+        title.setFont(new java.awt.Font("Showcard Gothic", 0, 14)); // NOI18N
+        title.setText("Player 1 Vs Player 2");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(title)
+                .addGap(36, 36, 36))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(SPbtn)
-                        .addGap(206, 206, 206))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TPbtn))
-                        .addContainerGap())))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(nxtMovelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(winnerState, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                        .addComponent(btnReplay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(SPbtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TPbtn)
-                .addGap(27, 27, 27)
+                .addGap(21, 21, 21)
+                .addComponent(title)
+                .addGap(121, 121, 121)
                 .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nxtMovelbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -222,10 +276,10 @@ public class tttGUI extends javax.swing.JFrame {
                             .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
@@ -256,10 +310,6 @@ public class tttGUI extends javax.swing.JFrame {
         //btn3.setEnabled(false);
 
     }//GEN-LAST:event_btn3ActionPerformed
-
-    private void SPbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SPbtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SPbtnActionPerformed
 
     private void btn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2ActionPerformed
         if(!clickState[2]){
@@ -313,6 +363,31 @@ public class tttGUI extends javax.swing.JFrame {
         replay();
     }//GEN-LAST:event_btnReplayActionPerformed
 
+    private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
+        this.dispose();
+        new PlayerMenu().setVisible(true);
+    }//GEN-LAST:event_btnMenuActionPerformed
+
+    
+    void stateUpdate(){
+        
+        Thread threadSB  = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    try {
+                        winnerState.setText(winnerStateTxt);
+                        nxtMovelbl.setText("Next move to :  "+ currentPlayer);
+                        //let thread sleep
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Error in state update thread");
+                    }
+                }
+            }
+        };
+        threadSB.start();
+    }
     /**
      * @param args the command line arguments
      */
@@ -350,7 +425,7 @@ public class tttGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new tttGUI().setVisible(true);
+                //new tttGUI().setVisible(true);
             }
         });
     }
@@ -364,37 +439,53 @@ public class tttGUI extends javax.swing.JFrame {
          list2ID++;
          */
 
-        int winner = controller.checkForWin(list1, abs(mark - 1), mark);
+        int winner = controller.checkForWin(list1, abs(mark - 1), mark);// list1 ,com marks,plyer1 marks
 
         if (winner == 0) {
             if (list2[8] != 0) {
-                System.out.println("Game is draw");
+                //System.out.println("Game is draw");
+                JOptionPane.showMessageDialog(null, "Game is draw");
             } 
-            else if (SPbtn.isSelected()) {
+            else if (gameMode==1) {
                 singlePlayer(mark);  //single player mode
 
-                winner = controller.checkForWin(list1, abs(mark - 1), mark);
-
-                System.out.println(winner + "********" + list2[8]);
-                if (winner == 0 && (list2[8] != 0)) {
-                    System.out.println("Game is draw");
-
-                } else if (winner == -1) {
-                    System.out.println("**************  Com win **************");
-
-                } else if (winner == -2) {
-
-                    System.out.println("**************  user win **************");
-                }
+                
             } else {
                 currentMark = abs(mark - 1);  // two palyer mode
+                if(currentMark==p1Mark){
+                    currentPlayer=p1name;
+                    
+                }
+                else{
+                    currentPlayer=p2name;
+                }
             }
         } else if (winner == -1) {
-            System.out.println("**************  Com win **************");
-
+            if(mark==p1Mark){
+                //System.out.println("**************  Com win **************");
+                JOptionPane.showMessageDialog(null, p2name+" wins");
+                winnerStateTxt=p2name+"wins";
+                lockBtns();
+            }
+            else{
+                JOptionPane.showMessageDialog(null, p1name+"wins");
+                winnerStateTxt=p1name+" wins";
+                lockBtns();
+            }
+            
         } else if (winner == -2) {
 
-            System.out.println("**************  user win **************");
+            if(mark==p1Mark){
+                //System.out.println("**************  player 1 **************");
+                JOptionPane.showMessageDialog(null, p1name+" wins");
+                winnerStateTxt=p1name+"wins";
+                lockBtns();
+            }
+            else{
+                JOptionPane.showMessageDialog(null, p2name+" wins");
+                winnerStateTxt=p2name+" wins";
+                lockBtns();
+            }
         }
 
     }
@@ -406,8 +497,8 @@ public class tttGUI extends javax.swing.JFrame {
         System.out.println("next click is");
         System.out.println(nextClick);
         if (nextClick == 0) {
-            //game is over
-            
+            JOptionPane.showMessageDialog(null, "Game is draw");
+            winnerStateTxt="Game is draw";
         }
 
         if (mark == 0) {
@@ -417,17 +508,58 @@ public class tttGUI extends javax.swing.JFrame {
             setMark(nextClick, 0);
 
         }
+        
+        int winner = controller.checkForWin(list1, abs(mark - 1), mark);// list1 ,com marks,plyer1 marks
+
+        System.out.println(winner + "********" + list2[8]);
+        if (winner == 0 && (list2[8] != 0)) {
+            JOptionPane.showMessageDialog(null, "Game is draw");
+            winnerStateTxt="Game is draw";
+            
+
+        } else if (winner == -1) {
+            System.out.println("**************  Com win **************");
+            JOptionPane.showMessageDialog(null, "PC wins");
+            winnerStateTxt="PC wins";
+            lockBtns();
+
+        } else if (winner == -2) {
+
+            System.out.println("**************  user win **************");
+            JOptionPane.showMessageDialog(null, p1name+" wins");
+            winnerStateTxt=p1name+" wins";
+            lockBtns();
+        }
+        else{
+            currentPlayer= p1name;
+        }
     }
 
+    
+    private void lockBtns(){
+        for(int i=1; i<10;i++){
+            clickState[i]=true;
+        }   
+    }
+    
     void replay() {
 
         this.dispose();
-        new tttGUI().setVisible(true);
+        new tttGUI(gameMode,player1,player2).setVisible(true);
     }
 
     private void setMark(int nextClick, int nextMark) {
 
-        System.out.println(nextClick + "***************************");
+        if(clickState[0]==false){
+            //SPbtn.setEnabled(false);
+            //TPbtn.setEnabled(false);
+            clickState[0]=true; //atleast one butto has clicked once
+            //System.out.println("**********************************************************");
+        }
+        
+        
+        
+        //System.out.println(nextClick + "***************************");
         list1[nextClick - 1] = nextMark;
 
         list2[list2ID] = nextClick;
@@ -435,7 +567,7 @@ public class tttGUI extends javax.swing.JFrame {
         list2ID++;
 
         if (nextMark == 1) {
-            System.out.println("nextMark  1 in if  ******************");
+            //System.out.println("nextMark  1 in if  ******************");
             switch (nextClick) {
                 case 1:
                     btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
@@ -526,8 +658,6 @@ public class tttGUI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JRadioButton SPbtn;
-    private javax.swing.JRadioButton TPbtn;
     private javax.swing.JButton btn1;
     private javax.swing.JButton btn2;
     private javax.swing.JButton btn3;
@@ -538,8 +668,11 @@ public class tttGUI extends javax.swing.JFrame {
     private javax.swing.JButton btn8;
     private javax.swing.JButton btn9;
     private javax.swing.ButtonGroup btnGrp1;
+    private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnReplay;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel nxtMovelbl;
+    private javax.swing.JLabel title;
     private javax.swing.JLabel winnerState;
     // End of variables declaration//GEN-END:variables
 

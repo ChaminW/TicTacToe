@@ -1,5 +1,8 @@
 package play;
 
+import java.util.Arrays;
+import java.util.Random;
+
 public class Controller {
 
     public int nextChoice(int[] buttonData, int[] eo, int com, int user) {
@@ -38,6 +41,38 @@ public class Controller {
                 if (buttonData[we] == 2) {
                     return we + 1;
                 }
+            }
+        }
+        return returnValue;
+    }
+
+    
+    public int mediumChoice(int[] buttonData, int com, int user){
+        int[] tempButtonData = buttonData;
+        //then check is their any place obvious to return, input button details with 1,0 and enter null buttons as 2
+        int returnValue = obviousNextChoise(tempButtonData, com, user);
+        if (returnValue==0){
+            returnValue = eazyChoise(buttonData, com, user);
+        }
+        return returnValue;
+    }
+    
+    
+    public int eazyChoise(int[] buttonData, int com, int user) {
+
+        int lenth = 0;
+        for (int u = 0; u < 9; u++) {
+            if (buttonData[u] == 2) {
+                lenth++;
+            }
+        }
+        int temp = (new Random().nextInt(lenth)) + 1;
+        int yu = 0;
+        int returnValue = 0;
+        for (int u = 0; yu < temp; u++) {
+            if (buttonData[u] == 2) {
+                returnValue = u;
+                yu++;
             }
         }
         return returnValue;
@@ -316,8 +351,10 @@ public class Controller {
             int t3 = eo[2];
 
             if (t1 == 1 & t2 == 5 & t3 == 9) {
-                return 2;//Chamin have to take one of these two numbers
+                return 2;
             } else if (t1 == 1 & t2 == 5 & t3 == 6) {
+                return 9;
+            } else if (t1 == 1 & t2 == 5 & t3 == 8) {
                 return 9;
             } else if (t1 == 2 & t2 == 3 & t3 == 1) {
                 return 9;
@@ -325,6 +362,12 @@ public class Controller {
                 return 9;
             } else if (t1 == 2 & t2 == 3 & t3 == 5) {
                 return 8;
+            } else if (t1 == 2 & t2 == 3 & t3 == 6) {
+                return 5;
+            } else if (t1 == 2 & t2 == 3 & t3 == 9) {
+                return 8;
+            } else if (t1 == 2 & t2 == 3 & t3 == 7) {
+                return 5;
             } else if (t1 == 5 & t2 == 1 & t3 == 2) {
                 return 8;
             } else if (t1 == 5 & t2 == 1 & t3 == 9) {
