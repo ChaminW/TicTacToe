@@ -5,6 +5,7 @@
  */
 package gui;
 
+import com.jtattoo.plaf.noire.NoireLookAndFeel;
 import data.DbConnector;
 import data.Player;
 import data.playerDAO;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.UnsupportedLookAndFeelException;
 
 
 
@@ -58,6 +60,7 @@ public class PlayerMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         btnGrp1 = new javax.swing.ButtonGroup();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         SPbtn = new javax.swing.JRadioButton();
         MPbtn_off = new javax.swing.JRadioButton();
@@ -75,8 +78,13 @@ public class PlayerMenu extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         p2List = new javax.swing.JList();
+        jPanel3 = new javax.swing.JPanel();
+        hard = new javax.swing.JRadioButton();
+        medium = new javax.swing.JRadioButton();
+        easy = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Game Menu");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Mode"));
 
@@ -115,7 +123,7 @@ public class PlayerMenu extends javax.swing.JFrame {
                     .addComponent(MPbtn_on)
                     .addComponent(MPbtn_off)
                     .addComponent(SPbtn))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,7 +133,7 @@ public class PlayerMenu extends javax.swing.JFrame {
                 .addComponent(MPbtn_off)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MPbtn_on)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Player 1")));
@@ -164,13 +172,13 @@ public class PlayerMenu extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(p1NameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
+                .addGap(23, 23, 23))
         );
 
         playBtn.setText("Play");
@@ -225,12 +233,47 @@ public class PlayerMenu extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(p2NameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2)
+                .addGap(23, 23, 23))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Difficulty"));
+
+        buttonGroup1.add(hard);
+        hard.setSelected(true);
+        hard.setText("Hard");
+
+        buttonGroup1.add(medium);
+        medium.setText("Medium");
+
+        buttonGroup1.add(easy);
+        easy.setText("Easy");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(53, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(easy)
+                    .addComponent(medium)
+                    .addComponent(hard))
+                .addGap(51, 51, 51))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(hard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(medium)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(easy)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -241,7 +284,6 @@ public class PlayerMenu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(ScoreBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -251,19 +293,25 @@ public class PlayerMenu extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(playBtn)
                     .addComponent(exitBtn)
@@ -275,16 +323,17 @@ public class PlayerMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SPbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SPbtnActionPerformed
-        // TODO add your handling code here:
+        jPanel4.setVisible(false);
+        jPanel3.setVisible(true);
     }//GEN-LAST:event_SPbtnActionPerformed
 
     private void p1NameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_p1NameTxtKeyReleased
         String name = p1NameTxt.getText();
-        System.out.println(name);
+        //System.out.println(name);
         searchList1=searchPlayer(name);
         DefaultListModel<String> dlm = new DefaultListModel<>();
         for(Player p : searchList1){
-            System.out.println(p.getName());
+            //System.out.println(p.getName());
             dlm.addElement(p.getName());
         }
         p1List.setModel(dlm);
@@ -308,7 +357,7 @@ public class PlayerMenu extends javax.swing.JFrame {
 
     private void p2NameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_p2NameTxtKeyReleased
         String name = p2NameTxt.getText();
-        System.out.println(name);
+        //System.out.println(name);
         searchList2=searchPlayer(name);
         DefaultListModel<String> dlm = new DefaultListModel<>();
         for(Player p : searchList2){
@@ -325,7 +374,10 @@ public class PlayerMenu extends javax.swing.JFrame {
 
     private void playBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playBtnActionPerformed
         int gameMode;
-        
+        int difficulty;
+        if(hard.isSelected()){difficulty=1;}
+        else if(medium.isSelected()){difficulty=2;}
+        else{difficulty=3;}
         
         
         
@@ -337,10 +389,12 @@ public class PlayerMenu extends javax.swing.JFrame {
             }
             else if(searchList1.size()!=1){
                 
-                new tttGUI(1,addPlayer(p1NameTxt.getText())).setVisible(true);
+                new tttGUI(1,addPlayer(p1NameTxt.getText()),difficulty).setVisible(true);
+                this.setVisible(false);
             }
             else{
-                new tttGUI(1,searchList1.get(0)).setVisible(true);
+                new tttGUI(1,searchList1.get(0),difficulty).setVisible(true);
+                this.setVisible(false);
             }
         
         
@@ -353,7 +407,8 @@ public class PlayerMenu extends javax.swing.JFrame {
             }
             else if(searchList1.size()==1 && searchList2.size()==1){
                 
-                new tttGUI(2,searchList1.get(0),searchList2.get(0)).setVisible(true);
+                new tttGUI(2,searchList1.get(0),searchList2.get(0),difficulty).setVisible(true);
+                this.setVisible(false);
             }
             else{
                 Player player1=null;
@@ -365,13 +420,9 @@ public class PlayerMenu extends javax.swing.JFrame {
                 if(searchList1.size()!=1){
                     player2=addPlayer(p2NameTxt.getText());
                 }
-                new tttGUI(2,player1,player2).setVisible(true);
-                
-                
-                
+                new tttGUI(2,player1,player2,difficulty).setVisible(true);
+                this.setVisible(false);
             }
-        
-        
         
         }
         else{gameMode =3;
@@ -383,14 +434,19 @@ public class PlayerMenu extends javax.swing.JFrame {
         }
         
         
+        
+        
     }//GEN-LAST:event_playBtnActionPerformed
 
     private void MPbtn_onActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPbtn_onActionPerformed
-       //
+        jPanel4.setVisible(false);
+        jPanel3.setVisible(false);
     }//GEN-LAST:event_MPbtn_onActionPerformed
 
     private void MPbtn_offActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPbtn_offActionPerformed
-         jPanel4.setVisible(true);
+        jPanel4.setVisible(true);
+        jPanel3.setVisible(false);
+         
     }//GEN-LAST:event_MPbtn_offActionPerformed
 
     private List<Player> searchPlayer(String name)  {
@@ -414,32 +470,17 @@ public class PlayerMenu extends javax.swing.JFrame {
             Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
        
-        JOptionPane.showMessageDialog(null, "Player saved successfully");
+        JOptionPane.showMessageDialog(null, "New Player saved successfully");
         
         return player;
     }
     
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PlayerMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PlayerMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PlayerMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PlayerMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            /* Create and display the form */
+            javax.swing.UIManager.setLookAndFeel(new NoireLookAndFeel());
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -461,14 +502,19 @@ public class PlayerMenu extends javax.swing.JFrame {
     private javax.swing.JRadioButton SPbtn;
     private javax.swing.JButton ScoreBtn;
     private javax.swing.ButtonGroup btnGrp1;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JRadioButton easy;
     private javax.swing.JButton exitBtn;
+    private javax.swing.JRadioButton hard;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JRadioButton medium;
     private javax.swing.JList p1List;
     private javax.swing.JTextField p1NameTxt;
     private javax.swing.JList p2List;

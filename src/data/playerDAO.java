@@ -44,31 +44,31 @@ public class playerDAO {
         //set parameters
         
         myStmnt.setString(1, player.getName());
-        myStmnt.setString(1, player.getNoOfWins());
-        myStmnt.setString(1, player.getNoOfLosses());
-        myStmnt.setString(1, player.getNoOfDraws());
+        myStmnt.setString(2, player.getNoOfWins());
+        myStmnt.setString(3, player.getNoOfLosses());
+        myStmnt.setString(4, player.getNoOfDraws());
         
         myStmnt.executeUpdate();
-            System.out.println("Successfully added");
+        //System.out.println("Successfully added");
         
         }
         
         finally{
         close(myStmnt);
         
-        }
-        
+        } 
     }
-    
-    
     /**
      * update player
-     * */
+     *
+     * @throws java.sql.SQLException */
     public void updatePlayer (Player player, String selectedPlayer) throws SQLException{
+        System.out.println(selectedPlayer+ "   saving " + player.getName());
         PreparedStatement myStmnt = null; 
         try{
             //prepare the statement
-            String query = "UPDATE player set name=?,noOfWins=?,noOfLosses=?,noOfDraws=? WHERE values ClubName =?"; 
+            String query = "UPDATE player set name=?,noOfWins=?,noOfLosses=?,noOfDraws=? WHERE name=?"; 
+            myStmnt = myConn.prepareStatement(query);
             // set params
             myStmnt.setString(1,player.getName() );
             myStmnt.setString(2, player.getNoOfWins() );
@@ -106,7 +106,7 @@ public class playerDAO {
             Logger.getLogger(playerDAO.class.getName()).log(Level.SEVERE, null, ex);
         }        
         finally {
-                close(myStmnt, myRslt);
+            close(myStmnt, myRslt);
         }
         return null;
     }
@@ -141,7 +141,22 @@ public class playerDAO {
         
     }
     
-        
+      public void deletePlayer (String name) throws SQLException{
+        PreparedStatement myStmt = null;
+        try{
+            // prepare statement
+            myStmt = myConn.prepareStatement("delete from player where name=?");
+            
+            //set param
+            myStmt.setString(1, name);
+            
+            //execute statement
+            myStmt.executeUpdate();
+        }
+        finally{
+            close(myStmt);
+        }
+    }  
         
                 
         
@@ -152,12 +167,12 @@ public class playerDAO {
         
         
         
-        String name = myRslt.getString(2);
+        String name = myRslt.getString(1);
         //System.out.println(name+"    name");
         
-        String noOfWins = myRslt.getString(3);
-        String noOfLosses = myRslt.getString(4);
-        String noOfDraws = myRslt.getString(5);
+        String noOfWins = myRslt.getString(2);
+        String noOfLosses = myRslt.getString(3);
+        String noOfDraws = myRslt.getString(4);
         /*
         String tempMarksList = myRslt.getString(5);
         int[] marksList=null;

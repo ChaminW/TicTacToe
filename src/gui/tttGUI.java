@@ -6,8 +6,12 @@
 package gui;
 
 import com.jtattoo.plaf.noire.NoireLookAndFeel;
+import data.DbConnector;
 import data.Player;
+import data.playerDAO;
+import java.io.IOException;
 import static java.lang.Math.abs;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -28,6 +32,10 @@ import play.Controller;
  */
 public class tttGUI extends javax.swing.JFrame {
 
+    DbConnector dbConnector;
+    playerDAO playerDao;
+    
+    
     Controller controller = null;
 
     int list1[] = {2, 2, 2, 2, 2, 2, 2, 2, 2};
@@ -36,6 +44,9 @@ public class tttGUI extends javax.swing.JFrame {
     int list2ID = 0;
     
     int gameMode;//1= single   2= multi offline   3= multi online
+    int difficulty;  // 1-hard  // 2- medium   // 3 -easy
+    
+    
     Player player1;
     String p1name;
     Player player2;
@@ -45,46 +56,67 @@ public class tttGUI extends javax.swing.JFrame {
     
     boolean clickState[] ={false,false,false,false,false,false,false,false,false,false};
 
-    Random ran = new Random();
-    int currentMark = ran.nextInt(2);
+    //Random ran = new Random();
+    int currentMark = 0;     //= ran.nextInt(2);
     
    
     int p1Mark=currentMark;
     int p2Mark =abs(currentMark-1);
     
+    
+    int winnerIs;  // 0- pc  //1-plyer1  //2-player 2  //-1 draw
     String winnerStateTxt="";
     String currentPlayer=p1name;
     //Dictionary<String, int> dic =new Dictionary<String, int>(){};
     
       
 
-    public tttGUI(int gameMode,Player player1,Player player2) {//multi player mode
+    public tttGUI(int gameMode,Player player1,Player player2,int difficulty) {//multi player mode
         initComponents();
         controller = new Controller();
         
+        try {
+            dbConnector = new DbConnector();
+            playerDao = new playerDAO(dbConnector.getMyConn());
+            
+        } catch (IOException | SQLException ex) {
+            Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         this.gameMode =gameMode;
+        this.difficulty=difficulty;
         this.player1 =player1;
         this.p1name=player1.getName();
         this.player2=player2;
         this.p2name=player2.getName();
         
-        title.setText(player1.getName()+" VS "+player2.getName());
+        title.setText(player1.getName()+"  VS  "+player2.getName());
         
         stateUpdate();
         
         
     }
 
-    tttGUI(int gameMode, Player player1) {
+    tttGUI(int gameMode, Player player1,int difficulty) {
         initComponents();
         controller = new Controller();
         
+        try {
+            dbConnector = new DbConnector();
+            playerDao = new playerDAO(dbConnector.getMyConn());
+            
+        } catch (IOException | SQLException ex) {
+            Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         this.gameMode =gameMode;
+        this.difficulty=difficulty;
         this.player1 =player1;
         this.p1name=player1.getName();
         this.p2name="PC";
         
-        title.setText(player1.getName()+" VS PC");
+        
+        title.setText(player1.getName()+"  VS  PC");
         
         
         stateUpdate();
@@ -114,6 +146,7 @@ public class tttGUI extends javax.swing.JFrame {
         btnReplay = new javax.swing.JButton();
         btnMenu = new javax.swing.JButton();
         nxtMovelbl = new javax.swing.JLabel();
+        difficultyLbl = new javax.swing.JLabel();
         title = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -175,6 +208,7 @@ public class tttGUI extends javax.swing.JFrame {
 
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        winnerState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         winnerState.setText("Winner is :");
 
         btnReplay.setText("Retry");
@@ -191,44 +225,47 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
+        nxtMovelbl.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         nxtMovelbl.setText("Next move to :");
 
-        title.setFont(new java.awt.Font("Showcard Gothic", 0, 14)); // NOI18N
-        title.setText("Player 1 Vs Player 2");
+        difficultyLbl.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        difficultyLbl.setText("Difficulty level :");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(title)
-                .addGap(36, 36, 36))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(nxtMovelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(winnerState, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                        .addComponent(btnReplay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nxtMovelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(difficultyLbl))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(title)
-                .addGap(121, 121, 121)
+                .addGap(32, 32, 32)
+                .addComponent(difficultyLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nxtMovelbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(nxtMovelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7))
+                .addContainerGap())
         );
+
+        title.setFont(new java.awt.Font("GungsuhChe", 0, 18)); // NOI18N
+        title.setText("Player 1 Vs Player 2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -256,31 +293,38 @@ public class tttGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(title)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(77, 77, 77))
         );
 
         pack();
@@ -360,10 +404,20 @@ public class tttGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btn8ActionPerformed
 
     private void btnReplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplayActionPerformed
-        replay();
+        try {
+            replay();
+        } catch (SQLException ex) {
+            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnReplayActionPerformed
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
+        
+        try {
+            saveGame();
+        } catch (SQLException ex) {
+            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.dispose();
         new PlayerMenu().setVisible(true);
     }//GEN-LAST:event_btnMenuActionPerformed
@@ -445,6 +499,8 @@ public class tttGUI extends javax.swing.JFrame {
             if (list2[8] != 0) {
                 //System.out.println("Game is draw");
                 JOptionPane.showMessageDialog(null, "Game is draw");
+                lockBtns();
+                winnerIs=-1;
             } 
             else if (gameMode==1) {
                 singlePlayer(mark);  //single player mode
@@ -462,15 +518,22 @@ public class tttGUI extends javax.swing.JFrame {
             }
         } else if (winner == -1) {
             if(mark==p1Mark){
-                //System.out.println("**************  Com win **************");
+                
                 JOptionPane.showMessageDialog(null, p2name+" wins");
-                winnerStateTxt=p2name+"wins";
+                winnerStateTxt=p2name+" wins";
                 lockBtns();
+                if(p2name.equals("PC")){
+                    winnerIs=0;
+                }
+                else{
+                    winnerIs=2;
+                }
             }
             else{
                 JOptionPane.showMessageDialog(null, p1name+"wins");
                 winnerStateTxt=p1name+" wins";
                 lockBtns();
+                winnerIs=1;
             }
             
         } else if (winner == -2) {
@@ -478,13 +541,20 @@ public class tttGUI extends javax.swing.JFrame {
             if(mark==p1Mark){
                 //System.out.println("**************  player 1 **************");
                 JOptionPane.showMessageDialog(null, p1name+" wins");
-                winnerStateTxt=p1name+"wins";
+                winnerStateTxt=p1name+" wins";
                 lockBtns();
+                winnerIs=1;
             }
             else{
                 JOptionPane.showMessageDialog(null, p2name+" wins");
                 winnerStateTxt=p2name+" wins";
                 lockBtns();
+                if(p2name.equals("PC")){
+                    winnerIs=0;
+                }
+                else{
+                    winnerIs=2;
+                }
             }
         }
 
@@ -493,12 +563,25 @@ public class tttGUI extends javax.swing.JFrame {
     private void singlePlayer(int mark) {
 
         int tempList2[] = Arrays.copyOfRange(list2, 0, list2ID);
-        int nextClick = controller.nextChoice(list1, tempList2, abs(mark - 1), mark);
-        System.out.println("next click is");
-        System.out.println(nextClick);
+        int nextClick;
+        
+        if(difficulty==1){
+            nextClick= controller.nextChoice(list1, tempList2, abs(mark - 1), mark);
+        }
+        else if(difficulty==2){
+            nextClick= controller.mediumChoice(list1, abs(mark - 1), mark);
+        }
+        else{
+            nextClick= controller.eazyChoise(list1, abs(mark - 1), mark);
+        }
+        
+        //System.out.println("next click is");
+        //System.out.println(nextClick);
         if (nextClick == 0) {
             JOptionPane.showMessageDialog(null, "Game is draw");
             winnerStateTxt="Game is draw";
+            lockBtns();
+            winnerIs=-1;
         }
 
         if (mark == 0) {
@@ -515,20 +598,23 @@ public class tttGUI extends javax.swing.JFrame {
         if (winner == 0 && (list2[8] != 0)) {
             JOptionPane.showMessageDialog(null, "Game is draw");
             winnerStateTxt="Game is draw";
-            
+            lockBtns();
+            winnerIs=-1;
 
         } else if (winner == -1) {
-            System.out.println("**************  Com win **************");
+            //System.out.println("**************  Com win **************");
             JOptionPane.showMessageDialog(null, "PC wins");
             winnerStateTxt="PC wins";
             lockBtns();
+            winnerIs=0;
 
         } else if (winner == -2) {
 
-            System.out.println("**************  user win **************");
+            //System.out.println("**************  user win **************");
             JOptionPane.showMessageDialog(null, p1name+" wins");
             winnerStateTxt=p1name+" wins";
             lockBtns();
+            winnerIs=1;
         }
         else{
             currentPlayer= p1name;
@@ -536,16 +622,85 @@ public class tttGUI extends javax.swing.JFrame {
     }
 
     
+    
+    
     private void lockBtns(){
         for(int i=1; i<10;i++){
             clickState[i]=true;
         }   
     }
     
-    void replay() {
-
+    void replay() throws SQLException {
+        saveGame();
         this.dispose();
-        new tttGUI(gameMode,player1,player2).setVisible(true);
+        if(gameMode==1){
+            new tttGUI(gameMode,player1,difficulty).setVisible(true);
+        }
+        else if(gameMode==2){
+            new tttGUI(gameMode,player1,player2,difficulty).setVisible(true);
+        }
+    }
+    
+    void saveGame() throws SQLException{
+        switch (winnerIs){
+            case -1:
+                if(gameMode==1){
+                    
+                    int draws1=Integer.parseInt(player1.getNoOfDraws())+1;
+                    player1.setNoOfDraws(Integer.toString(draws1));
+                    
+                }
+                else if(gameMode==2){
+                    int draws1=Integer.parseInt(player1.getNoOfDraws())+1;
+                    player1.setNoOfDraws(Integer.toString(draws1));
+                    
+                    int draws2=Integer.parseInt(player2.getNoOfDraws())+1;
+                    player2.setNoOfDraws(Integer.toString(draws2));
+                }
+                break;
+            
+            case 0:  
+                int losses1=Integer.parseInt(player1.getNoOfLosses())+1;
+                player1.setNoOfLosses(Integer.toString(losses1));
+                break;
+            
+            case 1:
+                if(gameMode==1){
+                    
+                    int wins=Integer.parseInt(player1.getNoOfWins())+1;
+                    player1.setNoOfWins(Integer.toString(wins));
+                    
+                }
+                else if(gameMode==2){
+                    int wins=Integer.parseInt(player1.getNoOfWins())+1;
+                    player1.setNoOfWins(Integer.toString(wins));
+                    
+                    int losses=Integer.parseInt(player2.getNoOfLosses())+1;
+                    player2.setNoOfLosses(Integer.toString(losses));
+                }
+                break;
+            
+            case 2:
+                if(gameMode==2){
+                    int wins=Integer.parseInt(player2.getNoOfWins())+1;
+                    player2.setNoOfWins(Integer.toString(wins));
+                    
+                    int losses=Integer.parseInt(player1.getNoOfLosses())+1;
+                    player1.setNoOfLosses(Integer.toString(losses));
+                }
+                break;
+            
+        }
+        
+        if(gameMode==1){
+            playerDao.updatePlayer(player1, p1name);   
+        }
+        else if(gameMode==2){
+            playerDao.updatePlayer(player1, p1name); 
+            playerDao.updatePlayer(player2, p2name); 
+            
+        }
+        
     }
 
     private void setMark(int nextClick, int nextMark) {
@@ -609,7 +764,7 @@ public class tttGUI extends javax.swing.JFrame {
                     System.out.println("There is a error");
             }
         } else if (nextMark == 0) {
-            System.out.println("nextMark  0 in if  ******************");
+            //System.out.println("nextMark  0 in if  ******************");
             switch (nextClick) {
                 case 1:
                     btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
@@ -670,6 +825,7 @@ public class tttGUI extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btnGrp1;
     private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnReplay;
+    private javax.swing.JLabel difficultyLbl;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel nxtMovelbl;
     private javax.swing.JLabel title;
