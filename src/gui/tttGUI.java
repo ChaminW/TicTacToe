@@ -531,7 +531,7 @@ public class tttGUI extends javax.swing.JFrame {
                         }
 
                         //let thread sleep
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     } catch (InterruptedException ex) {
                         System.out.println("Error in state update thread");
                     }
