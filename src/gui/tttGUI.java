@@ -82,7 +82,7 @@ public class tttGUI extends javax.swing.JFrame {
         try {
             dbConnector = new DbConnector();
             playerDao = new playerDAO(dbConnector.getMyConn());
-            lan =new Network();
+            
             
         } catch (IOException | SQLException ex) {
             Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,6 +118,7 @@ public class tttGUI extends javax.swing.JFrame {
     tttGUI(int gameMode, Player player1,int difficulty) {// this is for single player mode and online mode
         initComponents();
         controller = new Controller();
+        lan =new Network();
         
         try {
             dbConnector = new DbConnector();
@@ -142,14 +143,17 @@ public class tttGUI extends javax.swing.JFrame {
             else if(difficulty==2){difficultyLbl.setText( "Difficulty level : Medium");}
             else {difficultyLbl.setText( "Difficulty level : Easy");}
         }
-        else{try {
-            // multi player online mode
+        else{// multi player online mode
             this.p2name="Lan Player";
+            try {
             
+            
+
             currentMark=lan.createFile("CHANAKA");
+
             } catch (IOException ex) {
                 Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
-                
+
             }
             readThread("CHANAKA");
             
