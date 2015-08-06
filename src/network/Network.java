@@ -31,10 +31,12 @@ public class Network {
 
         if (hisfile.exists()) {
             mybufferedWriter.write("222222222X");
+            mybufferedWriter.close();
             return 1;
         } else {
 
             mybufferedWriter.write("222222222O");
+            mybufferedWriter.close();
             return 0;
         }
 

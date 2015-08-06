@@ -141,13 +141,9 @@ public class tttGUI extends javax.swing.JFrame {
                 Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
 
             }
-            while (true) {
-                if (currentMark == 0 & currentMark == 1) {
-                    readThread("CHANAKA");
-                    break;
-                }
-                
-            }
+
+            readThread("CHANAKA");
+
         }
 
         stateUpdate();
@@ -479,6 +475,7 @@ public class tttGUI extends javax.swing.JFrame {
 
         try {
             saveGame();
+            lan.deleteFile();
         } catch (SQLException ex) {
             Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -894,6 +891,7 @@ public class tttGUI extends javax.swing.JFrame {
     }
 
     void btnUpdate(int[] lanList) {
+        
         int j = 1;
         for (int i : lanList) {
             if (i == 1) {
