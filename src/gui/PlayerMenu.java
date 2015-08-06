@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 import javax.swing.UnsupportedLookAndFeelException;
 import network.Network;
 
@@ -25,8 +24,10 @@ import network.Network;
 
 
 
-
 public class PlayerMenu extends javax.swing.JFrame {
+    
+  
+    
 
     DbConnector dbConnector;
     playerDAO playerDao;
@@ -40,6 +41,7 @@ public class PlayerMenu extends javax.swing.JFrame {
     public PlayerMenu() {
         initComponents();
         jPanel4.setVisible(false);
+        jPanel5.setVisible(false);
         
          try {
             dbConnector = new DbConnector();
@@ -73,7 +75,6 @@ public class PlayerMenu extends javax.swing.JFrame {
         p1List = new javax.swing.JList();
         playBtn = new javax.swing.JButton();
         exitBtn = new javax.swing.JButton();
-        ScoreBtn = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         p2NameTxt = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -83,6 +84,10 @@ public class PlayerMenu extends javax.swing.JFrame {
         hard = new javax.swing.JRadioButton();
         medium = new javax.swing.JRadioButton();
         easy = new javax.swing.JRadioButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        computerName = new javax.swing.JTextField();
+        ScoreBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Game Menu");
@@ -196,13 +201,6 @@ public class PlayerMenu extends javax.swing.JFrame {
             }
         });
 
-        ScoreBtn.setText("Scores");
-        ScoreBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ScoreBtnActionPerformed(evt);
-            }
-        });
-
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Player 2"));
 
         p2NameTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -225,7 +223,7 @@ public class PlayerMenu extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(p2NameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -260,7 +258,7 @@ public class PlayerMenu extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(easy)
                     .addComponent(medium)
@@ -278,24 +276,64 @@ public class PlayerMenu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Connection"));
+
+        jLabel3.setText("Computer Name of Other player");
+
+        computerName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                computerNameActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(computerName, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(computerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 8, Short.MAX_VALUE))
+        );
+
+        ScoreBtn.setText("Scores");
+        ScoreBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ScoreBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ScoreBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(playBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(exitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -304,7 +342,7 @@ public class PlayerMenu extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -312,11 +350,16 @@ public class PlayerMenu extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playBtn)
-                    .addComponent(exitBtn)
-                    .addComponent(ScoreBtn))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(playBtn)
+                            .addComponent(exitBtn)
+                            .addComponent(ScoreBtn)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -326,6 +369,7 @@ public class PlayerMenu extends javax.swing.JFrame {
     private void SPbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SPbtnActionPerformed
         jPanel4.setVisible(false);
         jPanel3.setVisible(true);
+        jPanel5.setVisible(false);
     }//GEN-LAST:event_SPbtnActionPerformed
 
     private void p1NameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_p1NameTxtKeyReleased
@@ -390,11 +434,11 @@ public class PlayerMenu extends javax.swing.JFrame {
             }
             else if(searchList1.size()!=1){
                 
-                new tttGUI(1,addPlayer(p1NameTxt.getText()),difficulty).setVisible(true);
+                new tttGUI(1,addPlayer(p1NameTxt.getText()),difficulty,"").setVisible(true);
                 this.setVisible(false);
             }
             else{
-                new tttGUI(1,searchList1.get(0),difficulty).setVisible(true);
+                new tttGUI(1,searchList1.get(0),difficulty,"").setVisible(true);
                 this.setVisible(false);
             }
         
@@ -440,11 +484,11 @@ public class PlayerMenu extends javax.swing.JFrame {
             }
             else if(searchList1.size()!=1){
                 
-                new tttGUI(3,addPlayer(p1NameTxt.getText()),difficulty).setVisible(true);
+                new tttGUI(3,addPlayer(p1NameTxt.getText()),difficulty,computerName.getText()).setVisible(true);
                 this.setVisible(false);
             }
             else{
-                new tttGUI(3,searchList1.get(0),difficulty).setVisible(true);
+                new tttGUI(3,searchList1.get(0),difficulty,computerName.getText()).setVisible(true);
                 this.setVisible(false);
             }
         
@@ -458,13 +502,19 @@ public class PlayerMenu extends javax.swing.JFrame {
     private void MPbtn_onActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPbtn_onActionPerformed
         jPanel4.setVisible(false);
         jPanel3.setVisible(false);
+        jPanel5.setVisible(true);
     }//GEN-LAST:event_MPbtn_onActionPerformed
 
     private void MPbtn_offActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPbtn_offActionPerformed
         jPanel4.setVisible(true);
         jPanel3.setVisible(false);
+        jPanel5.setVisible(false);
          
     }//GEN-LAST:event_MPbtn_offActionPerformed
+
+    private void computerNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computerNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_computerNameActionPerformed
 
     private List<Player> searchPlayer(String name)  {
         List<Player> list = new ArrayList<>();
@@ -520,15 +570,18 @@ public class PlayerMenu extends javax.swing.JFrame {
     private javax.swing.JButton ScoreBtn;
     private javax.swing.ButtonGroup btnGrp1;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JTextField computerName;
     private javax.swing.JRadioButton easy;
     private javax.swing.JButton exitBtn;
     private javax.swing.JRadioButton hard;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JRadioButton medium;

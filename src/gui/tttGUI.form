@@ -101,7 +101,6 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="btn2">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -110,7 +109,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn1">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -119,7 +117,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn3">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -128,7 +125,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn6">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -137,7 +133,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn5">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -146,7 +141,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn4">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -155,7 +149,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn9">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -164,7 +157,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn8">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -173,7 +165,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn7">
       <Properties>
-        <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>

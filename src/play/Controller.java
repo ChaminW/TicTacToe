@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 
 public class Controller {
 private static Logger loger = Logger.getLogger(Controller.class);
+
+
     public int nextChoice(int[] buttonData, int[] eo, int com, int user) {
 
 loger.info("Hard - buttons are "+Arrays.toString(buttonData)+ " and eo list is " + Arrays.toString(eo));

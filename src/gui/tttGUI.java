@@ -48,6 +48,7 @@ public class tttGUI extends javax.swing.JFrame {
     String p1name;
     Player player2;
     String p2name;
+    
 
     boolean clickState[] = {false, false, false, false, false, false, false, false, false, false};
 
@@ -63,6 +64,7 @@ public class tttGUI extends javax.swing.JFrame {
     //Dictionary<String, int> dic =new Dictionary<String, int>(){};
 
     int[] returnlist = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+    String otherPC;
 
     public tttGUI(int gameMode, Player player1, Player player2, int difficulty) {//multi player mode
         initComponents();
@@ -103,7 +105,7 @@ public class tttGUI extends javax.swing.JFrame {
         });
     }
 
-    tttGUI(int gameMode, Player player1, int difficulty) {// this is for single player mode and online mode
+    tttGUI(int gameMode, Player player1, int difficulty,String otherPC) {// this is for single player mode and online mode
         initComponents();
         controller = new Controller();
         lan = new Network();
@@ -121,8 +123,9 @@ public class tttGUI extends javax.swing.JFrame {
         this.player1 = player1;
         this.p1name = player1.getName();
         this.p2name = "PC";
+        this.otherPC=otherPC;
 
-        title.setText(player1.getName() + "  VS  PC");
+        
         if (gameMode == 1) {
             if (difficulty == 1) {
                 difficultyLbl.setText("Difficulty level : Hard");
@@ -135,16 +138,17 @@ public class tttGUI extends javax.swing.JFrame {
             this.p2name = "Lan Player";
             try {
 
-                currentMark = lan.createFile("CHANAKA");
+                currentMark = lan.createFile(otherPC);
                 System.out.println(currentMark);
             } catch (IOException ex) {
                 Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
 
             }
 
-            readThread("CHANAKA");
+            readThread(otherPC);
 
         }
+        title.setText(player1.getName() + "  VS  "+ p2name);
 
         stateUpdate();
 
@@ -193,7 +197,6 @@ public class tttGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tic Tac Toe");
 
-        btn2.setBorderPainted(false);
         btn2.setContentAreaFilled(false);
         btn2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,7 +204,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn1.setBorderPainted(false);
         btn1.setContentAreaFilled(false);
         btn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,7 +211,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn3.setBorderPainted(false);
         btn3.setContentAreaFilled(false);
         btn3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,7 +218,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn6.setBorderPainted(false);
         btn6.setContentAreaFilled(false);
         btn6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,7 +225,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn5.setBorderPainted(false);
         btn5.setContentAreaFilled(false);
         btn5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,7 +232,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn4.setBorderPainted(false);
         btn4.setContentAreaFilled(false);
         btn4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -241,7 +239,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn9.setBorderPainted(false);
         btn9.setContentAreaFilled(false);
         btn9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -249,7 +246,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn8.setBorderPainted(false);
         btn8.setContentAreaFilled(false);
         btn8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -257,7 +253,6 @@ public class tttGUI extends javax.swing.JFrame {
             }
         });
 
-        btn7.setBorderPainted(false);
         btn7.setContentAreaFilled(false);
         btn7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -475,7 +470,8 @@ public class tttGUI extends javax.swing.JFrame {
 
         try {
             saveGame();
-            lan.deleteFile();
+            
+            
         } catch (SQLException ex) {
             Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -508,13 +504,13 @@ public class tttGUI extends javax.swing.JFrame {
                 while (true) {
                     try {
 
-                        System.out.println("in read tread");
+                        //System.out.println("in read tread");
 
                         returnlist = lan.read(otherPC);
                         if (returnlist == null) {
                             continue;
                         }
-                        System.out.println("after read tread");
+                        //System.out.println("after read tread");
 
                         boolean equal = true;
                         for (int i = 0; i < returnlist.length; i++) {
@@ -526,7 +522,7 @@ public class tttGUI extends javax.swing.JFrame {
                         }
                         if (equal == false) {
                             list1 = returnlist;
-                            System.out.println(Arrays.toString(returnlist));
+                            //System.out.println(Arrays.toString(returnlist));
                             btnUpdate(returnlist);
                         }
 
@@ -716,7 +712,7 @@ public class tttGUI extends javax.swing.JFrame {
         saveGame();
         this.dispose();
         if (gameMode == 1) {
-            new tttGUI(gameMode, player1, difficulty).setVisible(true);
+            new tttGUI(gameMode, player1, difficulty,otherPC).setVisible(true);
         } else if (gameMode == 2) {
             new tttGUI(gameMode, player1, player2, difficulty).setVisible(true);
         }
@@ -729,7 +725,7 @@ public class tttGUI extends javax.swing.JFrame {
         }
         switch (winnerIs) {
             case -1:
-                if (gameMode == 1) {
+                if (gameMode == 1 || gameMode == 3) {
                     int draws1 = Integer.parseInt(player1.getNoOfDraws()) + 1;
                     player1.setNoOfDraws(Integer.toString(draws1));
 
@@ -748,7 +744,7 @@ public class tttGUI extends javax.swing.JFrame {
                 break;
 
             case 1:
-                if (gameMode == 1) {
+                if (gameMode == 1 || gameMode == 3) {
 
                     int wins = Integer.parseInt(player1.getNoOfWins()) + 1;
                     player1.setNoOfWins(Integer.toString(wins));
@@ -774,7 +770,7 @@ public class tttGUI extends javax.swing.JFrame {
 
         }
 
-        if (gameMode == 1) {
+        if (gameMode == 1 || gameMode == 3) {
             playerDao.updatePlayer(player1, p1name);
         } else if (gameMode == 2) {
             playerDao.updatePlayer(player1, p1name);
@@ -891,7 +887,85 @@ public class tttGUI extends javax.swing.JFrame {
     }
 
     void btnUpdate(int[] lanList) {
+        if(lanList[0]==1){
+            btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[1] = true;
+        }
+        if(lanList[0]==0){
+            btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[1] = true;
+        }
+        if(lanList[1]==1){
+            btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[2] = true;
+        }
+        if(lanList[1]==0){
+            btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[2] = true;
+        }
+        if(lanList[2]==1){
+            btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[3] = true;
+        }
+        if(lanList[2]==0){
+            btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[3] = true;
+        }
+        if(lanList[3]==1){
+            btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[4] = true;
+        }
+        if(lanList[3]==0){
+            btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[4] = true;
+        }
+        if(lanList[4]==1){
+            btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[5] = true;
+        }
+        if(lanList[4]==0){
+            btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[5] = true;
+        }
+        if(lanList[5]==1){
+            btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[6] = true;
+        }
+        if(lanList[5]==0){
+            btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[6] = true;
+        }
+        if(lanList[6]==1){
+            btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[7] = true;
+        }
+        if(lanList[6]==0){
+            btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[7] = true;
+        }
+        if(lanList[7]==1){
+            btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[8] = true;
+        }
+        if(lanList[7]==0){
+            btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[8] = true;
+        }
+        if(lanList[8]==1){
+            btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+            clickState[9] = true;
+        }
+        if(lanList[8]==0){
+            btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                        clickState[9] = true;
+        }
         
+        
+        
+        
+        
+        
+        /*
         int j = 1;
         for (int i : lanList) {
             if (i == 1) {
@@ -985,7 +1059,7 @@ public class tttGUI extends javax.swing.JFrame {
 
             }
 
-        }
+        }*/
     }
 
 
