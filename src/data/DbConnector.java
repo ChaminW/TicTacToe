@@ -39,7 +39,7 @@ public class DbConnector {
         }
         
         myConn = DriverManager.getConnection(dburl, user, password);
-        System.out.println("DB connection successful to : " + dburl);
+        //System.out.println("DB connection successful to : " + dburl);
     }
 
     public Connection getMyConn() {

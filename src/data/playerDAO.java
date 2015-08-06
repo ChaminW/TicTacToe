@@ -63,7 +63,7 @@ public class playerDAO {
      *
      * @throws java.sql.SQLException */
     public void updatePlayer (Player player, String selectedPlayer) throws SQLException{
-        System.out.println(selectedPlayer+ "   saving " + player.getName());
+        //System.out.println(selectedPlayer+ "   saving " + player.getName());
         PreparedStatement myStmnt = null; 
         try{
             //prepare the statement

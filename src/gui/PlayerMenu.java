@@ -428,7 +428,16 @@ public class PlayerMenu extends javax.swing.JFrame {
         else{gameMode =3;
             if(p1NameTxt.getText().equals("")){
                 JOptionPane.showMessageDialog(null, "Enter player name", "Error", JOptionPane.ERROR_MESSAGE, null);
-
+                
+            }
+            else if(searchList1.size()!=1){
+                
+                new tttGUI(3,addPlayer(p1NameTxt.getText()),difficulty).setVisible(true);
+                this.setVisible(false);
+            }
+            else{
+                new tttGUI(3,searchList1.get(0),difficulty).setVisible(true);
+                this.setVisible(false);
             }
         
         }

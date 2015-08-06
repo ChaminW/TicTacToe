@@ -2,15 +2,17 @@ package play;
 
 import java.util.Arrays;
 import java.util.Random;
+import org.apache.log4j.Logger;
 
 public class Controller {
-
+private static Logger loger = Logger.getLogger(Controller.class);
     public int nextChoice(int[] buttonData, int[] eo, int com, int user) {
 
+loger.info("Hard - buttons are "+Arrays.toString(buttonData)+ " and eo list is " + Arrays.toString(eo));
         int[] tempButtonData = buttonData;
         //then check is their any place obvious to return, input button details with 1,0 and enter null buttons as 2
         int returnValue = obviousNextChoise(tempButtonData, com, user);
-        System.out.println(returnValue);
+        //System.out.println(returnValue);
         //else go to logic
         if (returnValue == 0) {
             int rotatedTimes = -1;
@@ -48,6 +50,7 @@ public class Controller {
 
     
     public int mediumChoice(int[] buttonData, int com, int user){
+        loger.info("Medium - buttons are "+Arrays.toString(buttonData));
         int[] tempButtonData = buttonData;
         //then check is their any place obvious to return, input button details with 1,0 and enter null buttons as 2
         int returnValue = obviousNextChoise(tempButtonData, com, user);
@@ -59,7 +62,7 @@ public class Controller {
     
     
     public int eazyChoise(int[] buttonData, int com, int user) {
-
+loger.info("Eazy - buttons are "+Arrays.toString(buttonData));
         int lenth = 0;
         for (int u = 0; u < 9; u++) {
             if (buttonData[u] == 2) {
@@ -80,7 +83,7 @@ public class Controller {
 
     public int checkForWin(int[] buttonData, int com, int user) {
         //first check for win return -1 if com win, return -2 if user win, else 0
-
+loger.info("For check winner - buttons are "+Arrays.toString(buttonData));
         if (buttonData[1] == com & buttonData[0] == com & buttonData[2] == com) {
             return -1;
         } else if (buttonData[1] == com & buttonData[2] == com & buttonData[0] == com) {
@@ -334,6 +337,7 @@ public class Controller {
     }
 
     public int tempNextChoice(int[] eo) {
+        loger.info("For process the logic, eo list is " + Arrays.toString(eo));
 //eo = entered order
         if (eo.length == 1) {
             int t = eo[0];

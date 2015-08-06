@@ -5,20 +5,20 @@
  */
 package gui;
 
+import network.Network;
 import com.jtattoo.plaf.noire.NoireLookAndFeel;
 import data.DbConnector;
 import data.Player;
 import data.playerDAO;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import static java.lang.Math.abs;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -34,13 +34,14 @@ public class tttGUI extends javax.swing.JFrame {
 
     DbConnector dbConnector;
     playerDAO playerDao;
+    Network lan;
     
     
     Controller controller = null;
 
-    int list1[] = {2, 2, 2, 2, 2, 2, 2, 2, 2};
+    int list1[] = {2, 2, 2, 2, 2, 2, 2, 2, 2}; // list that keep values of board
     int list1ID = 0;
-    int list2[] = new int[9];
+    int list2[] = new int[9]; // list that keep click sequence
     int list2ID = 0;
     
     int gameMode;//1= single   2= multi offline   3= multi online
@@ -69,6 +70,9 @@ public class tttGUI extends javax.swing.JFrame {
     String currentPlayer=p1name;
     //Dictionary<String, int> dic =new Dictionary<String, int>(){};
     
+    
+    int[] returnlist={2,2,2,2,2,2,2,2,2,2};
+    
       
 
     public tttGUI(int gameMode,Player player1,Player player2,int difficulty) {//multi player mode
@@ -78,6 +82,7 @@ public class tttGUI extends javax.swing.JFrame {
         try {
             dbConnector = new DbConnector();
             playerDao = new playerDAO(dbConnector.getMyConn());
+            lan =new Network();
             
         } catch (IOException | SQLException ex) {
             Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,12 +97,25 @@ public class tttGUI extends javax.swing.JFrame {
         
         title.setText(player1.getName()+"  VS  "+player2.getName());
         
+        difficultyLbl.setText("");
+        
         stateUpdate();
         
-        
+        // set a method to the default exit button window lisntner
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                this.addWindowListener( new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent we) {
+                        try {
+                            saveGame();// call exit method
+                        } catch (SQLException ex) {
+                            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } );
     }
 
-    tttGUI(int gameMode, Player player1,int difficulty) {
+    tttGUI(int gameMode, Player player1,int difficulty) {// this is for single player mode and online mode
         initComponents();
         controller = new Controller();
         
@@ -109,6 +127,8 @@ public class tttGUI extends javax.swing.JFrame {
             Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        
+        
         this.gameMode =gameMode;
         this.difficulty=difficulty;
         this.player1 =player1;
@@ -117,9 +137,42 @@ public class tttGUI extends javax.swing.JFrame {
         
         
         title.setText(player1.getName()+"  VS  PC");
+        if(gameMode==1){
+            if(difficulty==1){difficultyLbl.setText( "Difficulty level : Hard");}
+            else if(difficulty==2){difficultyLbl.setText( "Difficulty level : Medium");}
+            else {difficultyLbl.setText( "Difficulty level : Easy");}
+        }
+        else{try {
+            // multi player online mode
+            this.p2name="Lan Player";
+            
+            currentMark=lan.createFile("CHANAKA");
+            } catch (IOException ex) {
+                Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            readThread("CHANAKA");
+            
+            
+        }
+        
         
         
         stateUpdate();
+        
+         // set a method to the default exit button window lisntner
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                this.addWindowListener( new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent we) {
+                        try {
+                            saveGame();// call exit method
+                            btnMenu.doClick();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } );
     }
 
     /**
@@ -241,23 +294,24 @@ public class tttGUI extends javax.swing.JFrame {
                     .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nxtMovelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(difficultyLbl))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGap(21, 21, 21)
                 .addComponent(difficultyLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(winnerState, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nxtMovelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGap(29, 29, 29)
                 .addComponent(btnReplay, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -422,6 +476,77 @@ public class tttGUI extends javax.swing.JFrame {
         new PlayerMenu().setVisible(true);
     }//GEN-LAST:event_btnMenuActionPerformed
 
+
+    public static void main(String args[]) {
+        
+        try {
+            /* Create and display the form */
+            javax.swing.UIManager.setLookAndFeel(new NoireLookAndFeel());
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                //new tttGUI().setVisible(true);
+            }
+        });
+    }
+
+    void readThread(String otherPC){
+        
+        Thread threadSB  = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    try {
+                        try {
+                            returnlist=lan.read(otherPC);
+                            boolean equal=true;
+                            for (int i=0;i<10;i++){
+                                if(returnlist[i]!=list1[i]){
+                                    equal=false;
+                                    
+                                }
+                                
+                            }
+                            if(equal==false){
+                                list1=returnlist;
+                                System.out.println(Arrays.toString(returnlist));
+                                btnUpdate(returnlist);
+                            }
+                            
+                        } catch (IOException ex) {
+                            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        //let thread sleep
+                        Thread.sleep(300);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Error in state update thread");
+                    }
+                }
+            }
+        };
+        threadSB.start();
+        
+        
+        
+    }
+    
+    void fileWrite(){
+        
+        try {
+            //System.out.println(Arrays.toString(list1));
+            //int[] tempLiest1=list1.clone();
+            
+            lan.write(list1);
+            System.out.println("Writing");
+        } 
+        catch (IOException ex) {
+            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     void stateUpdate(){
         
@@ -442,51 +567,13 @@ public class tttGUI extends javax.swing.JFrame {
         };
         threadSB.start();
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(tttGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(tttGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(tttGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(tttGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        try {
-            /* Create and display the form */
-            javax.swing.UIManager.setLookAndFeel(new NoireLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new tttGUI().setVisible(true);
-            }
-        });
-    }
-
+    
     public void click(int index, int mark) {
 
         setMark(index, mark);  //setting icon of btn intially
+        if(gameMode==3){
+            fileWrite();
+        }
         /*
          list1[index]=mark;
          list2[list2ID]=index;
@@ -506,7 +593,7 @@ public class tttGUI extends javax.swing.JFrame {
                 singlePlayer(mark);  //single player mode
 
                 
-            } else {
+            } else if(gameMode ==2) {
                 currentMark = abs(mark - 1);  // two palyer mode
                 if(currentMark==p1Mark){
                     currentPlayer=p1name;
@@ -516,7 +603,8 @@ public class tttGUI extends javax.swing.JFrame {
                     currentPlayer=p2name;
                 }
             }
-        } else if (winner == -1) {
+        } 
+        else if (winner == -1) {
             if(mark==p1Mark){
                 
                 JOptionPane.showMessageDialog(null, p2name+" wins");
@@ -594,7 +682,7 @@ public class tttGUI extends javax.swing.JFrame {
         
         int winner = controller.checkForWin(list1, abs(mark - 1), mark);// list1 ,com marks,plyer1 marks
 
-        System.out.println(winner + "********" + list2[8]);
+        //System.out.println(winner + "********" + list2[8]);
         if (winner == 0 && (list2[8] != 0)) {
             JOptionPane.showMessageDialog(null, "Game is draw");
             winnerStateTxt="Game is draw";
@@ -642,10 +730,13 @@ public class tttGUI extends javax.swing.JFrame {
     }
     
     void saveGame() throws SQLException{
+        if (gameMode==3){// delete the file in muti play online mode
+            lan.deleteFile();
+            
+        }
         switch (winnerIs){
             case -1:
                 if(gameMode==1){
-                    
                     int draws1=Integer.parseInt(player1.getNoOfDraws())+1;
                     player1.setNoOfDraws(Integer.toString(draws1));
                     
@@ -679,7 +770,7 @@ public class tttGUI extends javax.swing.JFrame {
                     player2.setNoOfLosses(Integer.toString(losses));
                 }
                 break;
-            
+                
             case 2:
                 if(gameMode==2){
                     int wins=Integer.parseInt(player2.getNoOfWins())+1;
@@ -810,8 +901,105 @@ public class tttGUI extends javax.swing.JFrame {
         }
 
     }
+    void btnUpdate(int[] lanList){
+        int j=1;
+        for ( int i :lanList){
+        if (i == 1) {
+            
+            //System.out.println("nextMark  1 in if  ******************");
+            switch (j) {
+                case 1:
+                    btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[1]=true;
+                    break;
+                case 2:
+                    btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[2]=true;
+                    break;
+                case 3:
+                    btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[3]=true;
+                    break;
+                case 4:
+                    btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[4]=true;
+                    break;
+                case 5:
+                    btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[5]=true;
+                    break;
+                case 6:
+                    btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[6]=true;
+                    break;
+                case 7:
+                    btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[7]=true;
+                    break;
+                case 8:
+                    btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[8]=true;
+                    break;
+                case 9:
+                    btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+                    clickState[9]=true;
+                    break;
+                default:
+                    System.out.println("There is a error");
+            }
+            j++;
+        } 
+        else if (i == 0) {
+            //System.out.println("nextMark  0 in if  ******************");
+            switch (j) {
+                case 1:
+                    btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[1]=true;
+                    break;
+                case 2:
+                    btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[2]=true;
+                    break;
+                case 3:
+                    btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[3]=true;
+                    break;
+                case 4:
+                    btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[4]=true;
+                    break;
+                case 5:
+                    btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[5]=true;
+                    break;
+                case 6:
+                    btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[6]=true;
+                    break;
+                case 7:
+                    btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[7]=true;
+                    break;
+                case 8:
+                    btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[8]=true;
+                    break;
+                case 9:
+                    btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+                    clickState[9]=true;
+                    break;
+                default:
+                    System.out.println("There is a error");
 
+            }
+            j++;
 
+        }
+        
+    }
+    }
+
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn1;
     private javax.swing.JButton btn2;
