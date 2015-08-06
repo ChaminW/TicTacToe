@@ -6,8 +6,10 @@
 package gui;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SpringLayout;
 import network.Network;
 
 /**
@@ -22,14 +24,20 @@ public class NewMain {
     public static void main(String[] args) {
         
         Network n =new Network();
+        int[] a = null;
         try {
-            n.createFile("CHANAKA");
+            a=n.read("CHANAKA");
         } catch (IOException ex) {
             Logger.getLogger(NewMain.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("there is a error");
+            System.out.println("error");
         }
+        System.out.println(Arrays.toString(a));
         
-        
+        try {
+            n.write(a);
+        } catch (IOException ex) {
+            Logger.getLogger(NewMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         
     }

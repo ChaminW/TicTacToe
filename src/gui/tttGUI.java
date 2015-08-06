@@ -506,9 +506,13 @@ public class tttGUI extends javax.swing.JFrame {
                 while(true){
                     try {
                         try {
+                            
+                            System.out.println("in read tread");
                             returnlist=lan.read(otherPC);
+                            System.out.println("after read tread");
+                            
                             boolean equal=true;
-                            for (int i=0;i<10;i++){
+                            for (int i=0;i<returnlist.length;i++){
                                 if(returnlist[i]!=list1[i]){
                                     equal=false;
                                     
@@ -525,7 +529,7 @@ public class tttGUI extends javax.swing.JFrame {
                             Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         //let thread sleep
-                        Thread.sleep(300);
+                        Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         System.out.println("Error in state update thread");
                     }
