@@ -66,21 +66,26 @@ public class Network {
         }
     }
 
-    public int[] read(String OtherPC) throws IOException {
+    public int[] read(String OtherPC)  {
         try {
+            System.out.println(OtherPC);
             String path = "//" + OtherPC + "/Users/Public/tictactoe";
             FileReader fileReader = new FileReader(path);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String buttonDataString = bufferedReader.readLine();
+            
+                String buttonDataString = bufferedReader.readLine();
 
-            int[] buttonData = new int[buttonDataString.length()];
-            for (int gh = 0; gh < buttonDataString.length(); gh++) {
-                buttonData[gh] = Integer.parseInt(buttonDataString.substring(gh, gh + 1));
-            }
+                int[] buttonData = new int[buttonDataString.length()];
+                
+                for (int gh = 0; gh < buttonDataString.length(); gh++) {
+                    buttonData[gh] = Integer.parseInt(buttonDataString.substring(gh, gh + 1));
+                }
 
-            bufferedReader.close();
-            return buttonData;
-        } catch (FileNotFoundException e) {
+                bufferedReader.close();
+                return buttonData;
+            
+            
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Other player is not connected");
             return null;
         }

@@ -209,54 +209,63 @@ public class tttGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tic Tac Toe");
 
+        btn2.setContentAreaFilled(false);
         btn2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn2ActionPerformed(evt);
             }
         });
 
+        btn1.setContentAreaFilled(false);
         btn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn1ActionPerformed(evt);
             }
         });
 
+        btn3.setContentAreaFilled(false);
         btn3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn3ActionPerformed(evt);
             }
         });
 
+        btn6.setContentAreaFilled(false);
         btn6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn6ActionPerformed(evt);
             }
         });
 
+        btn5.setContentAreaFilled(false);
         btn5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn5ActionPerformed(evt);
             }
         });
 
+        btn4.setContentAreaFilled(false);
         btn4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn4ActionPerformed(evt);
             }
         });
 
+        btn9.setContentAreaFilled(false);
         btn9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn9ActionPerformed(evt);
             }
         });
 
+        btn8.setContentAreaFilled(false);
         btn8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn8ActionPerformed(evt);
             }
         });
 
+        btn7.setContentAreaFilled(false);
         btn7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn7ActionPerformed(evt);
@@ -505,10 +514,12 @@ public class tttGUI extends javax.swing.JFrame {
             public void run(){
                 while(true){
                     try {
-                        try {
+                        
                             
                             System.out.println("in read tread");
+                        
                             returnlist=lan.read(otherPC);
+                        
                             System.out.println("after read tread");
                             
                             boolean equal=true;
@@ -525,11 +536,9 @@ public class tttGUI extends javax.swing.JFrame {
                                 btnUpdate(returnlist);
                             }
                             
-                        } catch (IOException ex) {
-                            Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                       
                         //let thread sleep
-                        Thread.sleep(1000);
+                        Thread.sleep(100000);
                     } catch (InterruptedException ex) {
                         System.out.println("Error in state update thread");
                     }
