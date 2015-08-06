@@ -19,6 +19,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.UnsupportedLookAndFeelException;
+import network.Network;
 
 
 
@@ -426,6 +427,12 @@ public class PlayerMenu extends javax.swing.JFrame {
         
         }
         else{gameMode =3;
+            try {
+                 int currentMark= new Network().createFile("CHANAKA");
+            } catch (IOException ex) {
+                Logger.getLogger(PlayerMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             
             if(p1NameTxt.getText().equals("")){
                 JOptionPane.showMessageDialog(null, "Enter player name", "Error", JOptionPane.ERROR_MESSAGE, null);

@@ -1,6 +1,5 @@
 package network;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,17 +33,14 @@ public class Network {
             mybufferedWriter.write("222222222X");
             return 1;
         } else {
-            if (hisfile.isDirectory()) {
-                mybufferedWriter.write("222222222O");
-                return 0;
-            } else {
-                JOptionPane.showMessageDialog(null, "Please Connect another computer");
-                return 2;
-            }
+
+            mybufferedWriter.write("222222222O");
+            return 0;
         }
+
     }
 
-    public void write(int[] buttonData) throws IOException {
+public void write(int[] buttonData) throws IOException {
         String path = "C:/Users/Public/tictactoe";
         File file = new File(path);
         // if file doesnt exists, then create it
@@ -86,7 +82,7 @@ public class Network {
             
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Other player is not connected");
+            //JOptionPane.showMessageDialog(null, "Other player is not connected");
             return null;
         }
     }
