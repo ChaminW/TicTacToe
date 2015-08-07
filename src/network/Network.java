@@ -13,14 +13,14 @@ public class Network {
 
     public int createFile(String otherPC) throws IOException {
         //return my symbol X or O as 1 and 0. return 2 if not connected...
-
+        
         String mypath = "C:/Users/Public/tictactoe";
         File myfile = new File(mypath);
 
-        myfile.createNewFile();
+        //myfile.createNewFile();
 
         if (mypath.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "sdsddsds");
+            JOptionPane.showMessageDialog(null, "File can not create");
         }
 
         String hispath = "//" + otherPC + "/Users/Public/tictactoe";
@@ -66,7 +66,7 @@ public void write(int[] buttonData) throws IOException {
 
     public int[] read(String OtherPC)  {
         try {
-            System.out.println(OtherPC);
+            //System.out.println(OtherPC);
             String path = "//" + OtherPC + "/Users/Public/tictactoe";
             FileReader fileReader = new FileReader(path);
             BufferedReader bufferedReader = new BufferedReader(fileReader);

@@ -48,7 +48,6 @@ public class tttGUI extends javax.swing.JFrame {
     String p1name;
     Player player2;
     String p2name;
-    
 
     boolean clickState[] = {false, false, false, false, false, false, false, false, false, false};
 
@@ -105,7 +104,7 @@ public class tttGUI extends javax.swing.JFrame {
         });
     }
 
-    tttGUI(int gameMode, Player player1, int difficulty,String otherPC) {// this is for single player mode and online mode
+    tttGUI(int gameMode, Player player1, int difficulty, String otherPC) {// this is for single player mode and online mode
         initComponents();
         controller = new Controller();
         lan = new Network();
@@ -123,9 +122,8 @@ public class tttGUI extends javax.swing.JFrame {
         this.player1 = player1;
         this.p1name = player1.getName();
         this.p2name = "PC";
-        this.otherPC=otherPC;
+        this.otherPC = otherPC;
 
-        
         if (gameMode == 1) {
             if (difficulty == 1) {
                 difficultyLbl.setText("Difficulty level : Hard");
@@ -139,6 +137,11 @@ public class tttGUI extends javax.swing.JFrame {
             try {
 
                 currentMark = lan.createFile(otherPC);
+                if (currentMark == 0) {
+                    currentPlayer=p1name;
+                } else {
+                    currentPlayer="Lan Player";
+                }
                 System.out.println(currentMark);
             } catch (IOException ex) {
                 Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,7 +151,7 @@ public class tttGUI extends javax.swing.JFrame {
             readThread(otherPC);
 
         }
-        title.setText(player1.getName() + "  VS  "+ p2name);
+        title.setText(player1.getName() + "  VS  " + p2name);
 
         stateUpdate();
 
@@ -470,8 +473,7 @@ public class tttGUI extends javax.swing.JFrame {
 
         try {
             saveGame();
-            
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(tttGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -505,7 +507,6 @@ public class tttGUI extends javax.swing.JFrame {
                     try {
 
                         //System.out.println("in read tread");
-
                         returnlist = lan.read(otherPC);
                         if (returnlist == null) {
                             continue;
@@ -522,12 +523,13 @@ public class tttGUI extends javax.swing.JFrame {
                         }
                         if (equal == false) {
                             list1 = returnlist;
-                            //System.out.println(Arrays.toString(returnlist));
+                            System.out.println(Arrays.toString(returnlist));
+                            currentPlayer = p1name;
                             btnUpdate(returnlist);
                         }
 
                         //let thread sleep
-                        Thread.sleep(100);
+                        Thread.sleep(300);
                     } catch (InterruptedException ex) {
                         System.out.println("Error in state update thread");
                     }
@@ -577,6 +579,7 @@ public class tttGUI extends javax.swing.JFrame {
         setMark(index, mark);  //setting icon of btn intially
         if (gameMode == 3) {
             fileWrite();
+            currentPlayer = "Lan Player";
         }
         /*
          list1[index]=mark;
@@ -658,7 +661,6 @@ public class tttGUI extends javax.swing.JFrame {
         }
 
         //System.out.println("next click is");
-        //System.out.println(nextClick);
         if (nextClick == 0) {
             JOptionPane.showMessageDialog(null, "Game is draw");
             winnerStateTxt = "Game is draw";
@@ -711,8 +713,8 @@ public class tttGUI extends javax.swing.JFrame {
     void replay() throws SQLException {
         saveGame();
         this.dispose();
-        if (gameMode == 1) {
-            new tttGUI(gameMode, player1, difficulty,otherPC).setVisible(true);
+        if (gameMode == 1 || gameMode == 3) {
+            new tttGUI(gameMode, player1, difficulty, otherPC).setVisible(true);
         } else if (gameMode == 2) {
             new tttGUI(gameMode, player1, player2, difficulty).setVisible(true);
         }
@@ -720,6 +722,7 @@ public class tttGUI extends javax.swing.JFrame {
 
     void saveGame() throws SQLException {
         if (gameMode == 3) {// delete the file in muti play online mode
+           
             lan.deleteFile();
 
         }
@@ -887,179 +890,174 @@ public class tttGUI extends javax.swing.JFrame {
     }
 
     void btnUpdate(int[] lanList) {
-        if(lanList[0]==1){
+        if (lanList[0] == 1) {
             btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[1] = true;
         }
-        if(lanList[0]==0){
+        if (lanList[0] == 0) {
             btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[1] = true;
+            clickState[1] = true;
         }
-        if(lanList[1]==1){
+        if (lanList[1] == 1) {
             btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[2] = true;
         }
-        if(lanList[1]==0){
+        if (lanList[1] == 0) {
             btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[2] = true;
+            clickState[2] = true;
         }
-        if(lanList[2]==1){
+        if (lanList[2] == 1) {
             btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[3] = true;
         }
-        if(lanList[2]==0){
+        if (lanList[2] == 0) {
             btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[3] = true;
+            clickState[3] = true;
         }
-        if(lanList[3]==1){
+        if (lanList[3] == 1) {
             btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[4] = true;
         }
-        if(lanList[3]==0){
+        if (lanList[3] == 0) {
             btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[4] = true;
+            clickState[4] = true;
         }
-        if(lanList[4]==1){
+        if (lanList[4] == 1) {
             btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[5] = true;
         }
-        if(lanList[4]==0){
+        if (lanList[4] == 0) {
             btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[5] = true;
+            clickState[5] = true;
         }
-        if(lanList[5]==1){
+        if (lanList[5] == 1) {
             btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[6] = true;
         }
-        if(lanList[5]==0){
+        if (lanList[5] == 0) {
             btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[6] = true;
+            clickState[6] = true;
         }
-        if(lanList[6]==1){
+        if (lanList[6] == 1) {
             btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[7] = true;
         }
-        if(lanList[6]==0){
+        if (lanList[6] == 0) {
             btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[7] = true;
+            clickState[7] = true;
         }
-        if(lanList[7]==1){
+        if (lanList[7] == 1) {
             btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[8] = true;
         }
-        if(lanList[7]==0){
+        if (lanList[7] == 0) {
             btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[8] = true;
+            clickState[8] = true;
         }
-        if(lanList[8]==1){
+        if (lanList[8] == 1) {
             btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
             clickState[9] = true;
         }
-        if(lanList[8]==0){
+        if (lanList[8] == 0) {
             btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[9] = true;
+            clickState[9] = true;
         }
-        
-        
-        
-        
-        
-        
+
         /*
-        int j = 1;
-        for (int i : lanList) {
-            if (i == 1) {
+         int j = 1;
+         for (int i : lanList) {
+         if (i == 1) {
 
-                //System.out.println("nextMark  1 in if  ******************");
-                switch (j) {
-                    case 1:
-                        btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[1] = true;
-                        break;
-                    case 2:
-                        btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[2] = true;
-                        break;
-                    case 3:
-                        btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[3] = true;
-                        break;
-                    case 4:
-                        btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[4] = true;
-                        break;
-                    case 5:
-                        btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[5] = true;
-                        break;
-                    case 6:
-                        btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[6] = true;
-                        break;
-                    case 7:
-                        btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[7] = true;
-                        break;
-                    case 8:
-                        btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[8] = true;
-                        break;
-                    case 9:
-                        btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
-                        clickState[9] = true;
-                        break;
-                    default:
-                        System.out.println("There is a error");
-                }
-                j++;
-            } else if (i == 0) {
-                //System.out.println("nextMark  0 in if  ******************");
-                switch (j) {
-                    case 1:
-                        btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[1] = true;
-                        break;
-                    case 2:
-                        btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[2] = true;
-                        break;
-                    case 3:
-                        btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[3] = true;
-                        break;
-                    case 4:
-                        btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[4] = true;
-                        break;
-                    case 5:
-                        btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[5] = true;
-                        break;
-                    case 6:
-                        btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[6] = true;
-                        break;
-                    case 7:
-                        btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[7] = true;
-                        break;
-                    case 8:
-                        btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[8] = true;
-                        break;
-                    case 9:
-                        btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
-                        clickState[9] = true;
-                        break;
-                    default:
-                        System.out.println("There is a error");
+         //System.out.println("nextMark  1 in if  ******************");
+         switch (j) {
+         case 1:
+         btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[1] = true;
+         break;
+         case 2:
+         btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[2] = true;
+         break;
+         case 3:
+         btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[3] = true;
+         break;
+         case 4:
+         btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[4] = true;
+         break;
+         case 5:
+         btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[5] = true;
+         break;
+         case 6:
+         btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[6] = true;
+         break;
+         case 7:
+         btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[7] = true;
+         break;
+         case 8:
+         btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[8] = true;
+         break;
+         case 9:
+         btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/cross.png")));
+         clickState[9] = true;
+         break;
+         default:
+         System.out.println("There is a error");
+         }
+         j++;
+         } else if (i == 0) {
+         //System.out.println("nextMark  0 in if  ******************");
+         switch (j) {
+         case 1:
+         btn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[1] = true;
+         break;
+         case 2:
+         btn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[2] = true;
+         break;
+         case 3:
+         btn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[3] = true;
+         break;
+         case 4:
+         btn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[4] = true;
+         break;
+         case 5:
+         btn5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[5] = true;
+         break;
+         case 6:
+         btn6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[6] = true;
+         break;
+         case 7:
+         btn7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[7] = true;
+         break;
+         case 8:
+         btn8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[8] = true;
+         break;
+         case 9:
+         btn9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/png/nought.png")));
+         clickState[9] = true;
+         break;
+         default:
+         System.out.println("There is a error");
 
-                }
-                j++;
+         }
+         j++;
 
-            }
+         }
 
-        }*/
+         }*/
     }
 
 

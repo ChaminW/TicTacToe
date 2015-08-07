@@ -406,7 +406,7 @@ public class PlayerMenu extends javax.swing.JFrame {
         searchList2=searchPlayer(name);
         DefaultListModel<String> dlm = new DefaultListModel<>();
         for(Player p : searchList2){
-            System.out.println(p.getName());
+            //System.out.println(p.getName());
             dlm.addElement(p.getName());
         }
         p2List.setModel(dlm);
